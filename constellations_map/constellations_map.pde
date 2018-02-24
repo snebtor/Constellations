@@ -14,13 +14,38 @@ boolean firstpress, polygonClosed, editMode;
 int x1, y1, x2, y2, a, verticesIndex;
 float xoff, yoff,val1,val2;
 
+int xspacing = 3;   // How far apart should each horizontal location be spaced
+int w;              // Width of entire wave
+
+
+float theta = 0.0;  // Start angle at 0
+float amplitude = 75.0;  // Height of wave
+float period = 500.0;  // How many pixels before the wave repeats
+float dx;  // Value for incrementing X, a function of period and xspacing
+float[] yvalues;  // Using an array to store height values for the wave
+
+/////////////////////////////////////////////////////
+float moveA; float moveB; float moveC; float moveD; 
+float moveE; float moveF; float moveG; float moveH;    
+float time_passed;
+float fluid_anchor = 1.0;
+float check = 0.0;
+PVector A,B,C,D,E,F;
+
 
 // Gets stuck if mouse clicks during "play" mode
 // revise why the use of general mouse pressed vs. local to each mode
 //possibility of saving points into a file with date
 
 void setup() {
-  frameRate(10);
+  A = new PVector(0, 44);
+  B = new PVector(142, 44);
+  C = new PVector(142, 0);
+  D = new PVector(370, 0);
+  E = new PVector(370, 44);
+  F = new PVector(512, 44);
+  frameRate(15);
+  lights();
   //size(800, 600,P3D);
   fullScreen(P3D);
   pg = createGraphics(400, 200);
@@ -32,26 +57,32 @@ void setup() {
     a = 0;
     smooth();
     background(0);
+     w = 400+66; // connected to spacing of curved lines
+  dx = (TWO_PI / period) * xspacing;
+  yvalues = new float[w/xspacing];
+  ////////
+  time_passed = 0;
 }
 
 void draw() {
 
-  noStroke();
+   
    val1=int(random(0,height)); 
-    val2=map(noise(xoff), 0, 1, 0,pg.height);
-  
+   val2=map(noise(xoff), 0, 1, 0,pg.height);
+   //background
+   pg.beginDraw();
+   pg.noStroke();
+   pg.fill(val1%255,65,98,156);
+   pg.rect(0,0,pg.width,pg.height);
+   pg.endDraw();
   
   
   //window that is mapped
-  pg.beginDraw();
-  pg.noStroke();
-  pg.fill(val1%255,65,98,156);
-  pg.rect(0,0,pg.width,pg.height);
-  pg.fill(frameCount%255,val1, val2,167);
-  pg.ellipse(pg.width/2, pg.height/2, val2, val2);
-  pg.endDraw();
+
   //mapped animation #1
   noisy();
+  ripples();
+  fluid();
   
   //paint the pg image
   image(pg, 10, 10); 
