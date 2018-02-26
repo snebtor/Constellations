@@ -10,7 +10,7 @@ class Vertx {
 
 Vertx[]vertices;
 Vertx vx1, vx2, vx3, vx4;
-boolean firstpress, polygonClosed, editMode;
+boolean firstpress, polygonClosed, editMode, applytex;
 int x1, y1, x2, y2, a, verticesIndex;
 float xoff, yoff,val1,val2;
 
@@ -23,13 +23,8 @@ float amplitude = 75.0;  // Height of wave
 float period = 500.0;  // How many pixels before the wave repeats
 float dx;  // Value for incrementing X, a function of period and xspacing
 float[] yvalues;  // Using an array to store height values for the wave
-
-/////////////////////////////////////////////////////
-float moveA; float moveB; float moveC; float moveD; 
-float moveE; float moveF; float moveG; float moveH;    
+ 
 float time_passed;
-float fluid_anchor = 1.0;
-float check = 0.0;
 PVector A,B,C,D,E,F;
 
 
@@ -46,13 +41,13 @@ void setup() {
   F = new PVector(512, 44);
   frameRate(15);
   lights();
-  //size(800, 600,P3D);
-  fullScreen(P3D);
+  size(800, 600,P3D);
+  //fullScreen(P3D);
   pg = createGraphics(400, 200);
   textureMode(NORMAL);
   vertices = new Vertx[1];
     firstpress = editMode = true;
-    polygonClosed = false;
+    polygonClosed = applytex = false;
     verticesIndex = 0;
     a = 0;
     smooth();
@@ -60,12 +55,10 @@ void setup() {
      w = 400+66; // connected to spacing of curved lines
   dx = (TWO_PI / period) * xspacing;
   yvalues = new float[w/xspacing];
-  ////////
   time_passed = 0;
 }
 
 void draw() {
-
    
    val1=int(random(0,height)); 
    val2=map(noise(xoff), 0, 1, 0,pg.height);
@@ -75,8 +68,7 @@ void draw() {
    pg.fill(val1%255,65,98,156);
    pg.rect(0,0,pg.width,pg.height);
    pg.endDraw();
-  
-  
+   
   //window that is mapped
 
   //mapped animation #1
@@ -98,7 +90,7 @@ void draw() {
   xoff += random(-0.5,0.5);
   
   //ADD GEOMETRY CREATION TOOL )No network
-  if (!editMode) {
+  if (applytex) {
     background(0);
     for (int i=0; i<vertices.length; i=i+4) {
       
@@ -113,25 +105,19 @@ void draw() {
       vertex(vertices[i+3].x, vertices[i+3].y, 0, 1); 
       endShape(CLOSE);    
     } 
-    //editMode = !editMode;
-  }
-  
-  
-  
+  }  
 }
 
 
 void mousePressed() {
   
- 
-  if (firstpress == true && editMode == true){
+   applytex = false;
+  if (firstpress == true){
     x1 = mouseX;
     y1 = mouseY;
     x2 = x1;
     y2 = y1;
     firstpress = false;
-    //println("HEREEEE");
-    //println(verticesIndex);
     vertices = (Vertx[]) expand(vertices, verticesIndex+1);
     vertices[verticesIndex] = new Vertx(x1, y1);   
   }else{
@@ -153,7 +139,7 @@ void mousePressed() {
 }
 
 void mouseReleased(){
-  if (verticesIndex % 4 == 0 && firstpress == true && editMode == true) {
+  if (verticesIndex % 4 == 0 && firstpress == true) {
     x2 = vertices[vertices.length-4].x;
     y2 = vertices[vertices.length-4].y;
     verticesIndex--;
@@ -167,6 +153,7 @@ void mouseReleased(){
 }
 
 void keyPressed() {
-  editMode = !editMode;
+
+  applytex = true;
   
 }
