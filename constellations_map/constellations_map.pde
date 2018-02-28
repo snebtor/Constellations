@@ -1,3 +1,11 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+
+// Pressing 'w' stores the coordinates of current shapes
+// Pressing 'r' loads the shapes previously saved in polygons.txt
+// pressing any other key applies texture on polygons
+
+
 PGraphics pg;
 
 class Vertx {
@@ -45,7 +53,7 @@ void setup() {
   //fullScreen(P3D);
   pg = createGraphics(400, 200);
   textureMode(NORMAL);
-  vertices = new Vertx[1];
+  vertices = new Vertx[0];
     firstpress = editMode = true;
     polygonClosed = applytex = false;
     verticesIndex = 0;
@@ -90,10 +98,10 @@ void draw() {
   xoff += random(-0.5,0.5);
   
   //ADD GEOMETRY CREATION TOOL )No network
-  if (applytex) {
+  if (applytex == true && vertices.length != 0) {
     background(0);
-    for (int i=0; i<vertices.length; i=i+4) {
-      
+    
+    for (int i=0; i<vertices.length; i=i+4) {      
       noStroke();
       
         //shape 1
@@ -153,7 +161,36 @@ void mouseReleased(){
 }
 
 void keyPressed() {
-
-  applytex = true;
+  if (key == 'w') {   // write to file
+    String points = "";
+    for (int i = 0; i < vertices.length; i++) {
+        String p1 = str(vertices[i].x);
+        String p2 = str(vertices[i].y);
+        points += p1 + "," + p2 + ";";       
+    }
+    String[] list = split(points, ';');
+    // Writes the strings to a file, each on a separate line
+     saveStrings("points.txt", list);    
   
+  } else if (key == 'r') {
+    String[] points = loadStrings("points.txt");
+
+    vertices = (Vertx[]) expand(vertices, points.length-1);
+    verticesIndex = points.length-1;
+    
+    for (int i = 0 ; i < points.length-1; i++) {      
+      String[] list = split(points[i], ',');
+      println("we are at index:  " + i);
+      println(list[0]);
+      println(list[1]);
+      int px = Integer.parseInt(list[0]); 
+      int py = Integer.parseInt(list[1]); 
+      vertices[i] = new Vertx(px, py);   
+    }
+    applytex = true;
+  
+  } else {
+    // apply texture to polygon(s)
+    applytex = true;
+  }
 }
