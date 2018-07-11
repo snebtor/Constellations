@@ -49,8 +49,8 @@ void setup() {
   F = new PVector(512, 44);
   frameRate(15);
   lights();
-  size(800, 600,P3D);
-  //fullScreen(P3D);
+  //size(800, 600,P3D);
+  fullScreen(P3D);
   pg = createGraphics(400, 200);
   textureMode(NORMAL);
   vertices = new Vertx[0];
@@ -59,7 +59,7 @@ void setup() {
     verticesIndex = 0;
     a = 0;
     smooth();
-    background(0);
+    background(255);
      w = 400+66; // connected to spacing of curved lines
   dx = (TWO_PI / period) * xspacing;
   yvalues = new float[w/xspacing];
@@ -86,7 +86,9 @@ void draw() {
   
   //paint the pg image
   image(pg, 10, 10); 
-  text("EDITMODE: ON:", width-200,10);
+  fill(0);
+  text("EDITMODE: ON:", width-400,10);
+  text("TO SAVE PRESS W; TO RELOAD PRESS R", width-400,60);
   beginShape();
   texture(pg);
    vertex(476, 37,0,0);
