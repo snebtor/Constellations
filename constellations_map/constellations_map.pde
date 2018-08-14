@@ -7,6 +7,16 @@ import java.io.FileWriter;
 
 
 PGraphics pg;
+float sec;
+int mil;
+
+color akasa = color(7, 13, 73); //black
+color vayu = color(90, 249, 217);//blue
+color tejas = color(255, 67, 56);// red
+color apas = color(215, 238, 231); //silver
+color phritivi = color(228, 232, 51);//yellow
+float val3, val4;
+float angle;
 
 class Vertx {
  int x, y;
@@ -22,7 +32,7 @@ boolean firstpress, polygonClosed, editMode, applytex;
 int x1, y1, x2, y2, a, verticesIndex;
 float xoff, yoff,val1,val2;
 
-int xspacing = 3;   // How far apart should each horizontal location be spaced
+int xspacing = 2;   // How far apart should each horizontal location be spaced
 int w;              // Width of entire wave
 
 
@@ -40,6 +50,11 @@ PVector A,B,C,D,E,F;
 // revise why the use of general mouse pressed vs. local to each mode
 //possibility of saving points into a file with date
 
+void settings() {
+  fullScreen(P3D,SPAN);
+}
+
+
 void setup() {
   A = new PVector(0, 44);
   B = new PVector(142, 44);
@@ -47,11 +62,12 @@ void setup() {
   D = new PVector(370, 0);
   E = new PVector(370, 44);
   F = new PVector(512, 44);
-  frameRate(15);
-  lights();
-  //size(800, 600,P3D);
-  fullScreen(P3D);
-  pg = createGraphics(400, 200);
+  //frameRate(15);
+  //lights();
+  //size(3840, 800 ,P3D);
+  //fullScreen(P2D, SPAN);
+  
+  pg = createGraphics(340, 340);
   textureMode(NORMAL);
   vertices = new Vertx[0];
     firstpress = editMode = true;
@@ -70,32 +86,36 @@ void draw() {
    
    val1=int(random(0,height)); 
    val2=map(noise(xoff), 0, 1, 0,pg.height);
+   mil=millis();
+   sec=second()*0.02;
+   angle+=0.001;
+   val4=sin(angle);
+   val3=map(val4,-1,1,0.12,0.9);
+   
    //background
    pg.beginDraw();
    pg.noStroke();
-   pg.fill(val1%255,65,98,156);
+   pg.fill(vayu,20);
    pg.rect(0,0,pg.width,pg.height);
    pg.endDraw();
    
   //window that is mapped
 
   //mapped animation #1
+  
+  //
+  
+  //circle();
   noisy();
-  ripples();
   fluid();
+  ripples();
   
   //paint the pg image
   image(pg, 10, 10); 
   fill(0);
   text("EDITMODE: ON:", width-400,10);
   text("TO SAVE PRESS W; TO RELOAD PRESS R", width-400,60);
-  beginShape();
-  texture(pg);
-   vertex(476, 37,0,0);
-    vertex(565,43,1,0);
-    vertex(749,133,1,1);
-    vertex(678,133,0,1);
-   endShape(CLOSE);
+  
   
   xoff += random(-0.5,0.5);
   
