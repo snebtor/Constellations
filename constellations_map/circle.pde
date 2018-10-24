@@ -2,7 +2,7 @@ void circle(){
   pg.beginDraw();
    
   
-  
+  //1280 x 800
 //stroke(255);
 
 for (int i = 0; i <= pg.height; i++) {

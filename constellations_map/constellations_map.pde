@@ -10,13 +10,19 @@ PGraphics pg;
 float sec;
 int mil;
 
-color akasa = color(7, 13, 73); //black
+color akasa = color(95, 35, 245); //black
 color vayu = color(90, 249, 217);//blue
 color tejas = color(255, 67, 56);// red
 color apas = color(215, 238, 231); //silver
 color phritivi = color(228, 232, 51);//yellow
 float val3, val4;
 float angle;
+
+boolean scene1 = true;
+boolean scene2 = false;
+boolean scene3 = false;
+boolean scene4 = false;
+
 
 class Vertx {
  int x, y;
@@ -46,24 +52,23 @@ float time_passed;
 PVector A,B,C,D,E,F;
 
 
-// Gets stuck if mouse clicks during "play" mode
-// revise why the use of general mouse pressed vs. local to each mode
-//possibility of saving points into a file with date
 
 void settings() {
-  fullScreen(P3D,SPAN);
+  //fullScreen(P3D,SPAN);
+  fullScreen(P3D);
 }
 
 
 void setup() {
+  cursor(CROSS);
   A = new PVector(0, 44);
   B = new PVector(142, 44);
   C = new PVector(142, 0);
   D = new PVector(370, 0);
   E = new PVector(370, 44);
   F = new PVector(512, 44);
-  //frameRate(15);
-  //lights();
+  
+  lights();
   //size(3840, 800 ,P3D);
   //fullScreen(P2D, SPAN);
   
@@ -104,11 +109,11 @@ void draw() {
   //mapped animation #1
   
   //
+  if (scene1) circle();
+  if (scene2) noisy();
+  if (scene3) ripples();
+  if (scene4) fluid();
   
-  //circle();
-  noisy();
-  fluid();
-  ripples();
   
   //paint the pg image
   image(pg, 10, 10); 
@@ -140,7 +145,7 @@ void draw() {
 
 
 void mousePressed() {
-  
+   
    applytex = false;
   if (firstpress == true){
     x1 = mouseX;
@@ -148,6 +153,7 @@ void mousePressed() {
     x2 = x1;
     y2 = y1;
     firstpress = false;
+    
     vertices = (Vertx[]) expand(vertices, verticesIndex+1);
     vertices[verticesIndex] = new Vertx(x1, y1);   
   }else{
@@ -209,10 +215,17 @@ void keyPressed() {
       int py = Integer.parseInt(list[1]); 
       vertices[i] = new Vertx(px, py);   
     }
+    
     applytex = true;
   
   } else {
     // apply texture to polygon(s)
     applytex = true;
   }
+  
+  if ( key == '1' )scene1 = !scene1;
+  if ( key == '2' )scene2 = !scene2;
+  if ( key == '3' )scene3 = !scene3;
+  if ( key == '4' )scene4 = !scene4;
+  //if ( key == '5' )scene4 = !scene4;
 }
